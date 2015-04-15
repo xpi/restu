@@ -1,0 +1,189 @@
+<% include header.ejs %>
+<script type="text/javascript">
+
+	function orderfood(food_id){
+
+		console.log(storage["order"]);
+			$.post('/cooking/add/',{bill_id:storage["bill_id"],table_num:storage["table_num"],food_id:food_id},function(data){
+				$("#foodList").append("<tr id='cid"+data.cooking_id+"'><td>"+food_id+"</td><td>"+foods[food_id].food_name+"</td><td>"+foods[food_id].food_price+"</td><td>等待接单</td></tr>");
+			})		
+		}
+
+</script>
+<nav class="top-bar" data-topbar role="navigation">
+      <ul class="title-area">   
+        <li class="name">
+          <h1><a href="#"><%=title%></a></h1>
+        </li>
+      </ul>
+
+         
+  <section class="top-bar-section">
+    <!-- Right Nav Section -->
+   
+
+    <!-- Left Nav Section -->
+    <ul class="left">
+      <li>
+        <a>餐桌号：<%=table_num%></a>
+      </li>
+    </ul>
+    <ul class="left">
+      <li><a>单据号：<%=bill_id%></a></li>
+    </ul>
+ <ul class="left">
+      <li class=""><a href="#" class="button success">呼叫服务</a></li>
+      <li class="active">
+        <a href="#" class="button" id="payBtn">结账</a>
+      </li>
+    </ul>
+  </section>
+</nav>
+
+
+<div class="row">
+		<div class="large-3  small-12 columns" style="margin-top:10px" >
+		</div>
+</div>
+
+<div class="row" style="background:#fff">
+		<div class=" large-4  medium-4 small-9 columns"  id="numberPad">
+			<input type="text" id="numberscr" style="font-size:1.5em;margin:4px;height:2em;width:294px;border-radius:5px; " placeholder="请输入菜式编号">
+		</div>
+
+		<div class="large-4  medium-4 small-9 columns tepanel end " id="foodInfo">
+	<!-- 		<div class="panel  radius" style="height:110px">
+				<div class="row">
+					<div class="small-12 columns"   id="foodInfo">
+					  <label class="h3font spanover"  id="foodName" style="height:40px;"></label>
+				  		<span id="foodPrice" class="h2font"></span> 
+
+						<span class="foodId" hidden>111</span>
+						<button class="radius smallbtn success " hidden style="display:none;position:absolute;right:0"  id="selectFood" >选择</button>
+					</div>
+				</div>			  
+			</div> -->
+			<span class="h2font success label">推荐搭配</span>
+			<div id="relativeFood" style="overflow:scroll;height:395px;border:1px solid #ccc;background:#eee;padding:5px;">
+				<div class="panel rcorg" style="padding:5px;">
+					<div class="row">
+						<div class="small-5  columns">
+							<label class="h3font ofstyle spanover" >辣子鸡</label>
+						</div>
+						<div class="small-3 columns">
+							<span class="h3font"> 12元</span> 
+						</div>
+						<div class="small-4 columns">
+							<button class="radius smallbtn success orderfoodBtn" onclick="orderfood(1,13,131429023498820,'辣子鸡')">点餐</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="large-4  medium-4 small-9 columns "  style="margin-top:5px;">
+			<div id="relativeFood" class = "tepanel" style="overflow:scroll;height:428px;border:1px solid #ccc;background:#eee;">
+				<table>
+				  <thead>
+				    <tr>
+				      <th >编号</th>
+				      <th >菜名</th>
+				      <th >价格</th>
+				      <th >状态</th>
+				    </tr>
+				  </thead>
+				  <tbody id="foodList">
+				  </tbody>
+				 
+				</table>
+			</div>	
+		</div>
+</div>
+
+
+<div class="modal" id="test-modal" hidden></div>
+
+
+<script type="text/javascript">
+	var selectFood;
+
+	jQuery(function($){
+		// bind event handlers to modal triggers
+		$('#selectFood').click(function(e){
+			e.preventDefault();
+			var price  = $(this).prev(".foodId").text();
+					});
+		// attach modal close handler
+	});
+</script>
+<script type="text/javascript">	
+	var foods;
+	var currentInputNum;
+	var press = function(num){	
+	  var cnum= $("#numberscr").val()
+      if(num==="C"){
+        $("#numberscr").val("");
+        return;
+      }      
+      if(num==="←"){
+        $("#numberscr").val(cnum.substr(0,cnum.length-1));
+        return;
+      } 
+      $("#numberscr").val(cnum+num+"");
+      currentInputNum=cnum+num;
+	}
+
+</script>
+
+<script type="text/javascript">
+	$.get('/bill/'+<%=bill_id%>,function(rows){
+		var pay_state  = rows[0].pay_state;
+		if(pay_state==1){
+			window.location.href="/account/<%=table_num%>/<%=bill_id%>/"
+		}
+	})
+	$.get("/food/",function(data){
+		foods=data;
+		init();
+	});
+	var init = function(){
+		var btns = [1,2,3,4,5,6,7,8,9,0,"←","C"];
+		for(i in btns){
+			var numberBtn = '<button  class="small radius button " style="font-size:25px;width:91px;height:70px;margin:5px;"  onmouseup="press($(this).text())")>'+btns[i]+'</button>';
+			$("#numberPad").append(numberBtn);
+		}
+		$("#numberPad").append('<button  class="small radius button alert" style="margin:5px;width:292px;font-size:19px" id="okbutton" >确认</button>');
+
+		$("#okbutton").click(function(){
+			if(foods[currentInputNum]){
+				selectFood=foods[currentInputNum];
+		      	// $("#foodName").text(foods[currentInputNum].food_name);
+		      	// $("#foodPrice").text(foods[currentInputNum].food_price+"元");
+		      	// $("#foodInfo").show();
+		      	// $("#selectFood").show();
+		      	var html = new EJS({url: '/ejsviews/food_modal.ejs'}).render({food_name:selectFood.food_name,food_price:selectFood.food_price,food_id:selectFood.food_id,table_num:<%=table_num%>,bill_id:<%=bill_id%>});
+				$('#test-modal').html("");
+				$('#test-modal').append(html);
+				$('#test-modal').modal().open();
+		      }else{
+		      	alert("不存在的编号");
+		      }
+		})
+		
+		$("#payBtn").click(function(){
+			var html = new EJS({url: '/ejsviews/pay_confirm.ejs'}).render({table_num:<%=table_num%>,bill_id:<%=bill_id%>});
+			$('#test-modal').html("");
+			$('#test-modal').append(html);
+			$('#test-modal').modal().open();
+
+
+		})
+			
+		$.get('/cooking/bill/'+<%=bill_id%>,function(rows){
+			console.log(rows);
+			$("#foodList").append(new EJS({url:"/ejsviews/selected_foods.ejs"}).render({data:rows}));
+
+		})
+
+	}
+</script>
+<% include footer.ejs %>

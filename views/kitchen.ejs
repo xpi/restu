@@ -1,0 +1,67 @@
+<% include header.ejs %>
+
+<nav class="top-bar" data-topbar role="navigation">
+  <ul class="title-area">   
+    <li class="name">
+      <h1><a href="#"><%=title%></a></h1>
+    </li>
+  </ul>
+     
+<section class="top-bar-section">
+<!-- Right Nav Section -->
+<ul class="right">
+  <li class="active">
+    <a href="#" class="button ">刷新</a>
+  </li>
+</ul>
+
+</section>
+</nav>
+
+<br>
+	<div id="cookingList" class="">
+		
+	</div>
+<script type="text/javascript">
+	$.get("/cooking/cooking_state/lt/3",function(rows){
+		$("#cookingList").append(new EJS({url:'/ejsviews/kitchen_cookings.ejs'}).render({data:rows}));
+		
+		initEvent();
+	});
+
+	function initEvent(){
+		$(".cooking0").one('click',function(){
+			changeclass(this,"cooking0","cooking1");
+			var cbtn = this;
+			$(this).one('click',function(){
+				changeCookingState(getCookingId(this),2,function(data){
+					changeclass(cbtn,"cooking1","cooking2");
+				});
+			});
+			changeCookingState(getCookingId(this),1,function(data){
+					changeclass(cbtn,"cooking0","cooking1");
+				});
+		});	
+		$(".cooking1").one('click',function(){
+			var cbtn = this;
+			changeCookingState(getCookingId(this),2,function(data){
+				changeclass(cbtn,"cooking1","cooking2");
+			});
+		});
+
+	}
+	function changeCookingState(cooking_id,cooking_state_id,callback){
+		$.post('/cooking/update/state/',{cooking_id:cooking_id,cooking_state_id:cooking_state_id},function(data){
+			callback(data);
+		});
+	}
+	function getCookingId(obj){
+		return $(obj).find(".cookingId").text()
+	}
+
+	
+
+
+
+</script>
+<% include footer.ejs %>

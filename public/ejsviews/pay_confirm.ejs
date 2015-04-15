@@ -1,0 +1,21 @@
+
+<div class="row" style="text-align:center;">
+		<h1>确认结账吗?</h1>
+		<button href="#" class=" button success" id="comfirmPayBtn" style="">确认</button>
+		<button href="#" class=" button alert" id="canclePayBtn" style="">取消</button>
+</div>
+
+<script>
+	
+		$('.modal #canclePayBtn').click(function(){
+			$.modal().close();
+		});
+
+		$('.modal #comfirmPayBtn').click(function(){
+			$.post('/bill/update/pay_state',{bill_id:<%=bill_id%>,pay_state:1},function(data){
+				window.location.href="/account/<%=table_num%>/<%=bill_id%>/"
+			});
+
+		});
+
+</script>

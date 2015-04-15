@@ -1,0 +1,56 @@
+<% include header.ejs %>
+
+<nav class="top-bar" data-topbar role="navigation">
+ <section class="top-bar-section">
+  <ul class="title-area">   
+    <li class="name">
+      <h1><a href="#"><%=title%></a></h1>
+    </li>
+  </ul>
+    <!-- Left Nav Section -->
+    <ul class="left">
+      <li>
+        <a>餐桌号：<%=table_num%></a>
+      </li>
+    </ul>
+    <ul class="left">
+      <li><a>单据号：<%=bill_id%></a></li>
+    </ul>
+</section>
+
+</nav>
+
+<div  class="row">
+	<div class="small-centered large-centered small-6 large-6 panel columns">
+		<h1 id="payState"></h1>
+	</div>
+	<div class="small-centered large-centered small-6 large-6 panel columns">
+		<span >总计：<span style="color:red;font-size:3em" id='payCount'></span>元</span>
+		
+		<h5 >点餐历史</h5>
+		<div style="height:200px;overflow:scroll">
+			<table  id="historyFoods">
+			</table>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+ 	$.get("/cooking/bill/pay/<%=bill_id%>/",function(data){
+ 		var paycount = 0;
+ 	  for(i in data){
+ 		$("#historyFoods").append("<tr><td>"+data[i].food_name+"</td>&nbsp<td>"+data[i].food_price+"</td></tr>");
+ 	  	paycount+=Number(data[i].food_price)
+ 	  }
+    $.get("/bill/<%=bill_id%>",function(bill){
+        $("#payState").text(bill[0].pay_state_msg);
+    })
+ 	  $("#payCount").append(paycount);
+ 	})
+
+
+
+
+</script>
+<% include footer.ejs %>

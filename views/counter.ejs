@@ -1,0 +1,57 @@
+<% include header.ejs %>
+
+<nav class="top-bar" data-topbar role="navigation">
+  <ul class="title-area">   
+    <li class="name">
+      <h1><a href="#"><%=title%></a></h1>
+    </li>
+  </ul>
+     
+<section class="top-bar-section">
+<!-- Right Nav Section -->
+<ul class="right">
+  <li class="active">
+    <a href="#" class="button success">清台</a>
+  </li>
+</ul>
+
+</section>
+</nav>
+
+<div id="tableList" class="">
+		
+
+</div>
+
+<script type="text/javascript">
+  	$.get("/table/need/pay/",function(data){
+ 	  	for(i in data){
+ 			$("#tableList").append(new EJS({url:"/ejsviews/table_items.ejs"}).render({table_num:data[i].table_num,pay_state:data[i].pay_state,bill_id:data[i].bill_id}));
+ 		}
+
+ 	  	$(".payState2").bind('click',function(){
+ 			$.post('/table/clear',{table_num:$(this).find(".tableNum").text()},function(data){
+ 				alert("清台成功");
+ 			});
+ 			$(this).remove();
+ 		})
+
+ 		
+		$(".payState1").bind('click',function(){
+			changeclass(this,"payState1","payState2");
+
+			$.post('/bill/update/pay_state',{bill_id:$(this).find(".billId").text(),pay_state:2},function(data){
+	 			$(".payState2").bind('click',function(){
+	 			$.post('/table/clear',{table_num:$(this).find(".tableNum").text()},function(data){
+	 				alert("清台成功");
+	 			});
+	 			$(this).remove();
+			});
+ 		})
+ 		})
+ 		
+
+ 	  	
+ 	})
+</script>
+<% include footer.ejs %>

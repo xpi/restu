@@ -1,0 +1,12 @@
+<% for(i in  data){
+
+ var order_date =  new Date(Number(data[i].order_date)).Format('hh:mm');
+  var food_state="cooking"+data[i].cooking_state_id;
+%>
+<div class="large-3 small-3 <%=food_state%> cookingItem columns end" id="cid<%=data[i].		cooking_id%>">
+		<label class="textcenter spanover h1font " ><%=data[i].food_name%></label>
+		<label class="textcenter">餐桌：<%=data[i].table_num%>号&nbsp;&nbsp;&nbsp;&nbsp;点餐时间：<%=order_date%> </label>
+		<span hidden class="cookingId"><%=data[i].cooking_id%></span>
+</div>
+
+<%}%>

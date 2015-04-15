@@ -1,0 +1,84 @@
+td{
+	overflow: hidden;
+	white-space: nowrap;
+	width: 180px;
+    text-overflow: ellipsis;
+}
+.spanover{
+	overflow: hidden;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+.redfont{
+	color:red;
+}
+.greenfont{
+	color: green;
+}
+.inputxt{
+	font-size:1.5em;margin:4px;height:2em;width:294px;border-radius:5px; 
+}
+.smallbtn {
+	padding:10px;margin:0;
+	font-size: 15px;
+}
+.tepanel{
+	padding:5px;background:#fff;
+
+	border-radius:5px;
+}
+.h1font{
+	font-size: 30px;
+}
+.h2font{
+	font-size: 25px;
+}
+.h3font{
+	font-size: 20px;
+}
+.h4font{
+	font-size: 15px;
+}
+.modal {
+    background: #eee;
+    width: 350px;
+    margin: 20px auto;
+    border: 3px solid #666;
+}
+
+.modal .close {
+	position: absolute;
+	right: 0;
+    text-decoration: none;
+    font-size: 40px;
+    cursor: pointer;
+}
+.cookingItem{
+	border: 2px solid #ddd;
+	background: #eee;
+	margin: 5px;
+}
+.tableItem{
+	margin:5px;
+}	
+.payState0{	
+
+}
+.payState1{
+	background: #7BFF00;
+}
+.payState2{
+	background: #FFE800;
+
+}
+.textcenter{
+	text-align: center;;
+}
+.cooking1{
+	background: #7BFF00;
+}
+.cooking2{
+		background: #FFE800;
+}
+

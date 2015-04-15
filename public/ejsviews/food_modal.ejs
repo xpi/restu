@@ -1,0 +1,24 @@
+<a href="#" class="close">&times;</a>
+<img src="/food_pic/<%=food_id%>.jpg" width="350"/><br>
+
+<span id="cfoodId" hidden><%=food_id%></span>
+<div class="row">
+		<span class="h2font"  id="cfoodName"><%=food_name%></span><br>
+		<span id="cfoodPrice" class="h2font"><%=food_price%>元</span> 
+		<button href="#" class=" button success" id="comfirmBtn" style="">确认</button>
+</div>
+
+<script>
+		$('.modal .close').on('click', function(e){
+			e.preventDefault();
+			$.modal().close();
+		});
+ 		
+		$('.modal #comfirmBtn').click(function(){
+			$("#numberscr").val("");
+			$.post('/cooking/add/',{bill_id:<%=bill_id%>,table_num:<%=table_num%>,food_id:<%=food_id%>},function(data){
+				$("#foodList").append("<tr id='cid"+data.cooking_id+"'><td><%=food_id%></td><td><%=food_name%></td><td><%=food_price%></td><td>等待接单</td></tr>");
+				$.modal().close();
+			})
+		});
+</script>
