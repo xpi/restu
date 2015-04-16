@@ -1,14 +1,16 @@
 <% include header.ejs %>
 <script type="text/javascript">
-
+	var cooking_io_res = io.connect("/"); 
+	cooking_io_res.on('cook_state',function(data){
+		$("#cid"+data.cooking_id+" .cookState").text(data.cooking_state);
+	})
+ 	var cooking_io = io.connect("/cooking");
 	function orderfood(food_id){
-
 		console.log(storage["order"]);
 			$.post('/cooking/add/',{bill_id:storage["bill_id"],table_num:storage["table_num"],food_id:food_id},function(data){
 				$("#foodList").append("<tr id='cid"+data.cooking_id+"'><td>"+food_id+"</td><td>"+foods[food_id].food_name+"</td><td>"+foods[food_id].food_price+"</td><td>等待接单</td></tr>");
 			})		
 		}
-
 </script>
 <nav class="top-bar" data-topbar role="navigation">
       <ul class="title-area">   
@@ -135,6 +137,9 @@
 </script>
 
 <script type="text/javascript">
+
+
+
 	$.get('/bill/'+<%=bill_id%>,function(rows){
 		var pay_state  = rows[0].pay_state;
 		if(pay_state==1){
@@ -156,10 +161,6 @@
 		$("#okbutton").click(function(){
 			if(foods[currentInputNum]){
 				selectFood=foods[currentInputNum];
-		      	// $("#foodName").text(foods[currentInputNum].food_name);
-		      	// $("#foodPrice").text(foods[currentInputNum].food_price+"元");
-		      	// $("#foodInfo").show();
-		      	// $("#selectFood").show();
 		      	var html = new EJS({url: '/ejsviews/food_modal.ejs'}).render({food_name:selectFood.food_name,food_price:selectFood.food_price,food_id:selectFood.food_id,table_num:<%=table_num%>,bill_id:<%=bill_id%>});
 				$('#test-modal').html("");
 				$('#test-modal').append(html);
@@ -174,8 +175,6 @@
 			$('#test-modal').html("");
 			$('#test-modal').append(html);
 			$('#test-modal').modal().open();
-
-
 		})
 			
 		$.get('/cooking/bill/'+<%=bill_id%>,function(rows){
@@ -183,7 +182,10 @@
 			$("#foodList").append(new EJS({url:"/ejsviews/selected_foods.ejs"}).render({data:rows}));
 
 		})
-
 	}
+
+	
+
+
 </script>
 <% include footer.ejs %>

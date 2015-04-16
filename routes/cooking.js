@@ -83,12 +83,19 @@ router.post('/update/state/',function(req,res,next){
 	var cooking_id = req.body.cooking_id;
 	var cooking_state_id = req.body.cooking_state_id;
 	var update_data = [cooking_state_id,cooking_id];
-	connection.query(update_state_sql,update_data,function (error, rows, fields) {  
-		res.send(rows);
+	connection.query(update_state_sql,update_data,function (error, rows, fields) { 
+
+		connection.query("select * from cooking_state where cooking_state_id = ?",[cooking_state_id],function(error,rows,fields){
+			
+		res.send({cooking_state:rows[0].cooking_state});
+
+		})
 	    if(error!=null){
 	        console.log(error); 
 	    }
 	});
+
+
 });
 
 

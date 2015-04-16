@@ -23,43 +23,54 @@
 		
 	</div>
 <script type="text/javascript">
+	var cooking_io_res = io.connect("/"); 
+ 	var cooking_io = io.connect("/cooking");
+ 	var cook_state_io = io.connect("/cook_state");
 	$.get("/cooking/cooking_state/lt/3",function(rows){
-		$("#cookingList").append(new EJS({url:'/ejsviews/kitchen_cookings.ejs'}).render({data:rows}));
+  		 for(i in rows){
+	  		 var order_date =  new Date(Number(rows[i].order_date)).Format('hh:mm');
+	  		 var food_state="cooking"+rows[i].cooking_state_id;
+  		 	 $("#cookingList").append(new EJS({url:'/ejsviews/kitchen_cookings.ejs'}).render({food_state:food_state,cooking_id:rows[i].cooking_id,food_name:rows[i].food_name,table_num:rows[i].table_num,order_date:order_date}));
+  		 }
 		
 		initEvent();
 	});
 
 	function initEvent(){
-		$(".cooking0").one('click',function(){
-			changeclass(this,"cooking0","cooking1");
+		$(document).on("click","#cookingList .cooking0",function(){
 			var cbtn = this;
-			$(this).one('click',function(){
-				changeCookingState(getCookingId(this),2,function(data){
-					changeclass(cbtn,"cooking1","cooking2");
-				});
-			});
 			changeCookingState(getCookingId(this),1,function(data){
 					changeclass(cbtn,"cooking0","cooking1");
-				});
-		});	
-		$(".cooking1").one('click',function(){
+			});
+		})	
+		$(document).on("click","#cookingList .cooking1",function(){
 			var cbtn = this;
 			changeCookingState(getCookingId(this),2,function(data){
 				changeclass(cbtn,"cooking1","cooking2");
 			});
-		});
-
+		})	
 	}
+
+
 	function changeCookingState(cooking_id,cooking_state_id,callback){
 		$.post('/cooking/update/state/',{cooking_id:cooking_id,cooking_state_id:cooking_state_id},function(data){
 			callback(data);
+			cook_state_io.emit('cook_state',{cooking_id:cooking_id,cooking_state:data.cooking_state},function(state){
+				console.log(200);
+			});
 		});
 	}
+
 	function getCookingId(obj){
 		return $(obj).find(".cookingId").text()
 	}
 
-	
+	cooking_io_res.on('cooking',function(data){
+		var order_date =  new Date().Format('hh:mm');
+	  	var food_state="cooking"+0;
+		$("#cookingList").append(new EJS({url:'/ejsviews/kitchen_cookings.ejs'}).render({food_state:food_state,cooking_id:data.cooking_id,food_name:data.food_name,table_num:data.table_num,order_date:order_date}));
+
+	})
 
 
 

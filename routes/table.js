@@ -13,7 +13,7 @@ router.get('/init', function(req, res, next) {
 });
 
 router.get('/:num/', function(req, res, next) {
-   connection.query('select * from rtable where table_num  = ?',[req.params.num], function (error, rows, fields) {  
+   connection.query('select * from rtable rt  left join rbill rb on rt.bill_id = rb.bill_id where rt.table_num  = ?',[req.params.num], function (error, rows, fields) {  
    		res.send(rows);
          if(error){
             console.log(error)

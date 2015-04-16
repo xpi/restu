@@ -6,16 +6,23 @@
 </div>
 
 <script>
-	
+	 	var pay_io_res = io().connect("/");
+	 	var pay_io = io.connect("/pay");	
 		$('.modal #canclePayBtn').click(function(){
 			$.modal().close();
 		});
 
 		$('.modal #comfirmPayBtn').click(function(){
 			$.post('/bill/update/pay_state',{bill_id:<%=bill_id%>,pay_state:1},function(data){
-				window.location.href="/account/<%=table_num%>/<%=bill_id%>/"
+				pay_io.emit("pay",{table_num:<%=table_num%>,bill_id:<%=bill_id%>},function(state){
+					console.log({table_num:<%=table_num%>,bill_id:<%=bill_id%>});
+					if(state==200){
+						window.location.href="/account/<%=table_num%>/<%=bill_id%>/"
+					}
+				})
 			});
 
 		});
+
 
 </script>

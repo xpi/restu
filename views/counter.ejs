@@ -23,35 +23,70 @@
 
 </div>
 
+<div class="modal" id="account-modal" hidden></div>
+
 <script type="text/javascript">
+ 	var order_io_res = io().connect("/");
+ 	var order_io = io.connect("/order");
+ 	var finishpay_io = io.connect("/finishpay");
+
+ 	function changePayStaste1(item,bId){
+ 		changeclass(this,"payState1","payState2");
+ 		item.onclick=function(){
+
+ 		}
+ 	}
+
+	function refresh(){
+		$(document).on("click","#tableList .payState1",function(){
+			var thisobj = this;
+			$.get('/cooking/bill/'+$(this).find(".billId").text(),function(data){
+				$('#account-modal').html(new EJS({url:"/ejsviews/bill_result.ejs"}).render({foods:data}));
+				$('#account-modal').modal().open();
+				$("#account-modal .confirmBtn").click(function(){
+					changeclass(thisobj,"payState1","payState2");
+					$.post('/bill/update/pay_state',{bill_id:$(thisobj).find(".billId").text(),pay_state:2},function(data){
+						finishpay_io.emit("finishpay",{bill_id:data.bill_id},function(state){console.log(state)});
+						$.modal().close();
+					});
+				})
+				$("#account-modal .cancelBtn").click(function(){
+					$.modal().close();
+			 	});
+			})
+			
+			// $.post('/bill/update/pay_state',{bill_id:$(this).find(".billId").text(),pay_state:2},function(data){
+			// 	finishpay_io.emit("finishpay",{bill_id:data.bill_id},function(data){alert("结账成功")});
+				
+			// });
+		})		
+		$(document).on("click","#tableList .payState2",function(){
+			$.post('/table/clear',{table_num:$(this).find(".tableNum").text()},function(data){
+		 		alert("清台成功");
+		 	});
+		 	$(this).remove();
+
+		})
+ 		console.log("refresh")
+	}
   	$.get("/table/need/pay/",function(data){
  	  	for(i in data){
  			$("#tableList").append(new EJS({url:"/ejsviews/table_items.ejs"}).render({table_num:data[i].table_num,pay_state:data[i].pay_state,bill_id:data[i].bill_id}));
  		}
-
- 	  	$(".payState2").bind('click',function(){
- 			$.post('/table/clear',{table_num:$(this).find(".tableNum").text()},function(data){
- 				alert("清台成功");
- 			});
- 			$(this).remove();
- 		})
-
- 		
-		$(".payState1").bind('click',function(){
-			changeclass(this,"payState1","payState2");
-
-			$.post('/bill/update/pay_state',{bill_id:$(this).find(".billId").text(),pay_state:2},function(data){
-	 			$(".payState2").bind('click',function(){
-	 			$.post('/table/clear',{table_num:$(this).find(".tableNum").text()},function(data){
-	 				alert("清台成功");
-	 			});
-	 			$(this).remove();
-			});
- 		})
- 		})
- 		
-
- 	  	
+ 		refresh(); 	  		 	
  	})
+
+ 	var order_io_res = io().connect("/");
+ 	var order_io = io.connect("/order");
+
+ 	order_io_res.on("order",function(data){
+ 		$("#tableList").append(new EJS({url:"/ejsviews/table_items.ejs"}).render({table_num:data.table_num,pay_state:0,bill_id:data.bill_id}));
+ 	})
+
+ 	order_io_res.on("pay",function(data){
+ 		console.log(data);
+ 		changeclass("#bid"+data.bill_id,"payState0","payState1");
+ 	});
+
 </script>
 <% include footer.ejs %>

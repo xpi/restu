@@ -51,14 +51,18 @@ router.post('/add/:table_num',function(req,res,next){
 	
 	connection.query(update_table_bill,update_data,function (error, rows, fields) {  
 	    if(error!=null){
+
 	        console.log(error); 
+
 	    }
 	});
 
 	connection.query(add_bill_sql,insert_data,function (error, rows, fields) {  
 		res.send({bill_id:bill_id});
-	    if(error!=null){						
+	    if(error!=null){
+
 	        console.log(error); 
+	        
 	    }
 	});
 });

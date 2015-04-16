@@ -1,0 +1,30 @@
+
+<div  class="row">
+
+	<div class="" style="text-align:center">
+		<h5 >确认收款页面</h5>
+		<h6>消费清单</h6>
+    <div style="max-height:200px;overflow:scroll">
+
+			<table  id="historyFoods">
+      <% var pay_count = 0; %>
+      <% for(i in foods){
+          pay_count+=foods[i].food_price;
+        %>
+        <tr>
+        <td><%=foods[i].food_name%></td>
+        <td><%=foods[i].food_price%></td>
+        </tr>
+      <%}%>
+			</table>
+		</div>
+          <span >总计：<span style="color:red;font-size:3em"><%=pay_count%></span>元</span><br>
+
+          <span class="button success confirmBtn">确认</span><span class="button alert cancelBtn" >取消</span>
+          <script>
+
+          </script>
+	</div>
+</div>
+
+

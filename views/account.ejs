@@ -33,21 +33,35 @@
 			</table>
 		</div>
 	</div>
-
 </div>
 
 <script type="text/javascript">
+  var finishpay_io_res = io().connect("/");
+  var finishpay_io = io.connect("/finishpay");  
  	$.get("/cooking/bill/pay/<%=bill_id%>/",function(data){
  		var paycount = 0;
+
  	  for(i in data){
- 		$("#historyFoods").append("<tr><td>"+data[i].food_name+"</td>&nbsp<td>"+data[i].food_price+"</td></tr>");
- 	  	paycount+=Number(data[i].food_price)
+ 		  $("#historyFoods").append("<tr><td>"+data[i].food_name+"</td>&nbsp<td>"+data[i].food_price+"</td></tr>");
+ 	  	paycount+=Number(data[i].food_price);
  	  }
+    $("#payCount").text(paycount);
+
     $.get("/bill/<%=bill_id%>",function(bill){
-        $("#payState").text(bill[0].pay_state_msg);
+        $("#payState").html(bill[0].pay_state_msg);
+        if(bill[0].pay_state == 2){ $("#payState").append("..<a href='/''>返回</a>")}
     })
- 	  $("#payCount").append(paycount);
- 	})
+    finishpay_io_res.on("finishpay",function(data){
+        if(data.bill_id==data.bill_id){
+          $("#payState").html("完成结账<a href='/''>返回</a>");
+        }
+    })
+
+  });
+
+ 
+
+
 
 
 

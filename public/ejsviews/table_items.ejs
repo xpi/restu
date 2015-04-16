@@ -2,7 +2,7 @@
 var payState ="payState"+pay_state;
 %>
 
-<div class="panel tableItem small-4 large-2 columns end <%=payState%>" >
+<div class="panel tableItem small-4 large-2 columns end <%=payState%>" id="bid<%=bill_id%>" onclick="changePayStaste<%=pay_state%>(this,<%=bill_id%>)">
 	<span>餐桌号：</span><span class="h2font"><%=table_num%></span>
 
 	<span class="billId" hidden><%=bill_id%></span>

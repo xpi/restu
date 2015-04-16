@@ -18,7 +18,7 @@ console.log(path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.get('/', function (req, res) {
-  res.render('index',{});
+  res.render('index',{title:'开单页面'});
 });
 
 //路由
@@ -27,17 +27,21 @@ for(i in routes){
   app.use('/'+routes[i], require('./routes/'+routes[i]));
 }
 
-
+var states = ['order','pay','finishpay','cooking','cook_state']; 
 //websocket
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-io.of('/client').on('connection', function (socket) {
-  console.log("connection");
-  socket.on('news',function(data){
-  	console.log(data);
-  	io.emit('news',data);
-  });
-});
-
-
+for(index in states){
+  (function(index){
+    io.of('/'+states[index]).on('connection', function (socket) {
+      console.log(socket.id);
+      socket.on(states[index], function (data,fn) {
+          console.log(data);
+          console.log(states[index]); 
+          fn(200);
+          io.emit(states[index], data); 
+      });
+    });
+   })(index); 
+}
 server.listen(3000);
