@@ -40,8 +40,10 @@
 	function refresh(){
 		$(document).on("click","#tableList .payState1",function(){
 			var thisobj = this;
-			$.get('/cooking/bill/'+$(this).find(".billId").text(),function(data){
-				$('#account-modal').html(new EJS({url:"/ejsviews/bill_result.ejs"}).render({foods:data}));
+
+			$.get('/cooking/bill/pay/'+$(thisobj).find(".billId").text(),function(data){
+				console.log('/cooking/bill/pay/'+$(thisobj).find(".billId").text());
+				$('#account-modal').html(new EJS({url:"/ejsviews/bill_result.ejs"}).render({foods:data,table_num:$(thisobj).find(".tableNum").text()}));
 				$('#account-modal').modal().open();
 				$("#account-modal .confirmBtn").click(function(){
 					changeclass(thisobj,"payState1","payState2");
@@ -67,7 +69,9 @@
 		 	$(this).remove();
 
 		})
+ 		
  		console.log("refresh")
+
 	}
   	$.get("/table/need/pay/",function(data){
  	  	for(i in data){

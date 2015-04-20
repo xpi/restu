@@ -1,0 +1,57 @@
+<% include header.ejs%>
+<nav class="top-bar" data-topbar role="navigation">
+ <section class="top-bar-section">
+  <ul class="title-area">   
+    <li class="name">
+      <h1><a href="#"><%=title%></a></h1>
+    </li>
+  </ul>
+
+</section>
+
+</nav>
+<div style="margin-left:auto;margin-right:auto;width:960px;">
+	<ul class="tabs" data-tab style="border:2px solid red;">
+	<li class="tab-title active"><a href="#panel1">餐桌管理</a></li>
+	<li class="tab-title"><a href="#panel2">菜品管理</a></li>
+	<li class="tab-title"><a href="#panel3">职员管理</a></li>
+	<li class="tab-title"><a href="#panel4">订单管理</a></li>
+	</ul>
+	<div class="tabs-content" data-tab style="border:2px solid red;margin-top:10px">
+	  <div class="content <%=panel1%>" id="panel1">
+	  </div>
+	  <div class="content <%=panel2%>" id="panel2">
+	  </div>
+	  <div class="content <%=panel3%>" id="panel3">
+	  </div>
+	  <div class="content <%=panel4%>" id="panel4">
+	  </div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(document).foundation();
+$.get("/table/",function(data){
+	$("#panel1").append(new EJS({url:"/ejsviews/table_manager.js"}).render({tables:data}));
+})
+
+$.get("/food",function(data){
+	$("#panel2").append(new EJS({url:"/ejsviews/food_manager.js"}).render({foods:data}));
+})
+
+$.get("/admin/query/staff",function(data){
+	$("#panel3").append(new EJS({url:"/ejsviews/staff_manager.js"}).render({staff:data}));
+})
+function deleteTable(table_num,obj){
+	$.post("/table/delete",{table_num:table_num},function(data){
+			$(obj).parent().parent().remove();
+		});
+}
+function deleteFood(food_id,obj){
+	$.post("/food/delete",{food_id:food_id},function(data){
+			$(obj).parent().parent().remove();
+		});
+}
+
+</script>
+<% include footer.ejs%>

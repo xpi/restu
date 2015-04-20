@@ -3,7 +3,16 @@ var router = express.Router();
 var connection =require("../dbconnetion.js").connection;  
 
 
-
+router.get('/', function(req, res, next) {
+	var find_bill = "select * from rbill limit 0,10";
+	connection.query(find_bill,function (error, rows, fields) {  
+		console.log(rows);
+		res.send(rows);
+	    if(error!=null){
+	        console.log(error); 
+	    }
+	});
+});
 //根据ID查找单据 
 router.get('/:id', function(req, res, next) {
 	var find_bill_by_id = "select * from rbill rb right join pay_state ps on ps.pay_state = rb.pay_state where bill_id = ?";

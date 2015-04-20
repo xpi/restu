@@ -1,0 +1,50 @@
+<% include header.ejs %>
+
+<nav class="top-bar" data-topbar role="navigation">
+  <ul class="title-area">   
+    <li class="name">
+      <h1><a href="#"><%=title%></a></h1>
+    </li>
+  </ul>
+     
+<section class="top-bar-section">
+
+
+</section>
+</nav>
+<br>
+
+<form method="post" action="/main/login">
+
+	<div id="entrance" class="row">
+		<div class="small-3  columns">
+			<input   type="text" name="admin_user" placeholder="管理员帐号">
+
+		</div>	
+		<div class="small-3  columns">
+			<input class="small-4 columns" type="text" name="admin_pwd" placeholder="密码">
+
+		</div>
+			<div class="small-12  columns">
+
+			<input type="submit" class="button success" value="登录" />
+			</div>
+	</div>
+
+
+
+</form>
+	
+
+<div class="modal" id="login-modal" hidden>
+
+</div>
+
+<script type="text/javascript">
+
+
+
+</script>
+
+
+<% include footer.ejs %>

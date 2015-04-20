@@ -3,14 +3,11 @@ var app = express();
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var session = require('cookie-session');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-
 
 app.use(express.static('public'));
 app.set('views', path.join(__dirname, 'views'));
@@ -22,10 +19,12 @@ app.get('/', function (req, res) {
 });
 
 //路由
-var routes = ["client","table","food","bill","cooking","customer","kitchen","counter","account"];
-for(i in routes){
-  app.use('/'+routes[i], require('./routes/'+routes[i]));
+var admin_routes = ["admin","main","table","food","bill","cooking","customer","kitchen","waiter","counter","account"];
+for(i in admin_routes){
+  var router = require('./routes/'+admin_routes[i]); 
+  app.use('/'+admin_routes[i], router);
 }
+
 
 var states = ['order','pay','finishpay','cooking','cook_state']; 
 //websocket

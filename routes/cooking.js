@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var connection =require("../dbconnetion.js").connection;  
 
+
 //根据ID查找
 router.get('/bill/:bill_id', function(req, res, next) {
 	var cooking_by_billId = "select * from tf_state ts right join cooking_state cs on cs.cooking_state_id = ts.cooking_state_id right join rfood rf on rf.food_id = ts.food_id	 where bill_id = ?";
@@ -12,10 +13,12 @@ router.get('/bill/:bill_id', function(req, res, next) {
 	    }
 	});
 });
+
 //根据ID查找
 router.get('/bill/pay/:bill_id', function(req, res, next) {
-	var cooking_by_billId = "select * from tf_state ts right join cooking_state cs on cs.cooking_state_id = ts.cooking_state_id right join rfood rf on rf.food_id = ts.food_id	 where bill_id = ? and ts.cooking_state_id > 0 ";
+	var cooking_by_billId = "select * from tf_state ts  right join cooking_state cs on cs.cooking_state_id = ts.cooking_state_id right join rfood rf on rf.food_id = ts.food_id	 where bill_id = ? and ts.cooking_state_id > 0  and ts.cooking_state_id < 4 ";
 	connection.query(cooking_by_billId,[req.params.bill_id],function (error, rows, fields) {  
+		console.log(rows);
 		res.send(rows);
 	    if(error!=null){
 	        console.log(error); 
@@ -25,7 +28,7 @@ router.get('/bill/pay/:bill_id', function(req, res, next) {
 
 //根据单据ID查找
 router.get('/:id', function(req, res, next) {
-	var cooking_by_id = "select * from tf_state where cooking_id = ?";
+	var cooking_by_id = "select * from tf_state tf  right join cooking_state cs on cs.cooking_state_id = tf.cooking_state_id  right join rfood rf on rf.food_id = tf.food_id  where cooking_id = ?";
 
 	connection.query(cooking_by_id,[req.params.id],function (error, rows, fields) {  
 		res.send(rows);
@@ -85,9 +88,9 @@ router.post('/update/state/',function(req,res,next){
 	var update_data = [cooking_state_id,cooking_id];
 	connection.query(update_state_sql,update_data,function (error, rows, fields) { 
 
-		connection.query("select * from cooking_state where cooking_state_id = ?",[cooking_state_id],function(error,rows,fields){
+		connection.query("select * from cooking_state  where cooking_state_id = ?",[cooking_state_id],function(error,rows,fields){
 			
-		res.send({cooking_state:rows[0].cooking_state});
+		res.send(rows[0]);
 
 		})
 	    if(error!=null){

@@ -1,0 +1,78 @@
+<% include header.ejs %>
+
+<nav class="top-bar" data-topbar role="navigation">
+  <ul class="title-area">   
+    <li class="name">
+      <h1><a href="#"><%=title%></a></h1>
+    </li>
+  </ul>
+     
+<section class="top-bar-section">
+<!-- Right Nav Section -->
+<ul class="right">
+  <li class="active">
+    <a href="#" class="button ">刷新</a>
+  </li>
+</ul>
+
+</section>
+</nav>
+
+<br>
+	<div id="cookingList" class="">
+		
+	</div>
+<script type="text/javascript">
+	var cooking_io_res = io.connect("/"); 
+ 	var cooking_io = io.connect("/cooking");
+ 	var cook_state_io = io.connect("/cook_state");
+	$.get("/cooking/cooking_state/eq/2",function(rows){
+  		 for(i in rows){
+	  		 var order_date =  new Date(Number(rows[i].order_date)).Format('hh:mm');
+	  		 var food_state="cooking"+rows[i].cooking_state_id;
+  		 	 $("#cookingList").append(new EJS({url:'/ejsviews/kitchen_cookings.ejs'}).render({food_state:food_state,cooking_id:rows[i].cooking_id,food_name:rows[i].food_name,table_num:rows[i].table_num,order_date:order_date}));
+  		 }
+		
+		initEvent();
+	});
+
+	function initEvent(){
+	
+		$(document).on("click","#cookingList .cooking2",function(){
+			var cbtn = this;
+			changeCookingState(getCookingId(this),3,function(data){
+				$(cbtn).parent().remove();
+			});
+		})
+
+	
+	}
+
+
+	function changeCookingState(cooking_id,cooking_state_id,callback){
+		$.post('/cooking/update/state/',{cooking_id:cooking_id,cooking_state_id:cooking_state_id},function(data){
+			callback(data);
+			cook_state_io.emit('cook_state',data,function(state){
+				console.log(200);
+			});
+		});
+
+	}
+
+	function getCookingId(obj){
+		return $(obj).find(".cookingId").text()
+	}
+
+	cooking_io_res.on('cook_state',function(data){
+		console.log(data);
+		var order_date =  new Date().Format('hh:mm');
+	  	var food_state="cooking"+2;
+		if(data.cooking_state_id==2){
+		$("#cookingList").append(new EJS({url:'/ejsviews/kitchen_cookings.ejs'}).render({food_state:food_state,cooking_id:data.cooking_id,food_name:data.food_name,table_num:data.table_num,order_date:order_date}));
+		}
+	})
+
+
+
+</script>
+<% include footer.ejs %>

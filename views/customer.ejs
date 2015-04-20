@@ -1,16 +1,24 @@
 <% include header.ejs %>
 <script type="text/javascript">
+	var selectFood={};
 	var cooking_io_res = io.connect("/"); 
 	cooking_io_res.on('cook_state',function(data){
 		$("#cid"+data.cooking_id+" .cookState").text(data.cooking_state);
 	})
  	var cooking_io = io.connect("/cooking");
-	function orderfood(food_id){
-		console.log(storage["order"]);
-			$.post('/cooking/add/',{bill_id:storage["bill_id"],table_num:storage["table_num"],food_id:food_id},function(data){
-				$("#foodList").append("<tr id='cid"+data.cooking_id+"'><td>"+food_id+"</td><td>"+foods[food_id].food_name+"</td><td>"+foods[food_id].food_price+"</td><td>等待接单</td></tr>");
-			})		
-		}
+	$(document).on("click",".orderFood",function(){
+			console.log(storage["order"]);
+			selectFood.food_id=$(this).find(".foodId").text();
+			selectFood.food_name=$("#fid"+selectFood.food_id+" .foodName").text();
+			selectFood.food_price=$("#fid"+selectFood.food_id+" .foodPrice").text();
+			console.log(selectFood);
+			var html = new EJS({url: '/ejsviews/food_modal.ejs'}).render({food_name:selectFood.food_name,food_price:selectFood.food_price,food_id:selectFood.food_id,table_num:<%=table_num%>,bill_id:<%=bill_id%>});
+			$('#test-modal').html("");
+			$('#test-modal').append(html);
+			$('#test-modal').modal().open();	
+	})
+
+	
 </script>
 <nav class="top-bar" data-topbar role="navigation">
       <ul class="title-area">   
@@ -34,7 +42,7 @@
       <li><a>单据号：<%=bill_id%></a></li>
     </ul>
  <ul class="left">
-      <li class=""><a href="#" class="button success">呼叫服务</a></li>
+      <li class=""><a href="#" class="button success" id="callService">呼叫服务</a></li>
       <li class="active">
         <a href="#" class="button" id="payBtn">结账</a>
       </li>
@@ -67,16 +75,19 @@
 			</div> -->
 			<span class="h2font success label">推荐搭配</span>
 			<div id="relativeFood" style="overflow:scroll;height:395px;border:1px solid #ccc;background:#eee;padding:5px;">
-				<div class="panel rcorg" style="padding:5px;">
-					<div class="row">
+				<div class="panel rcorg" style="padding:5px;" id="fid1">
+					<div class="row sugFoodItem" >
 						<div class="small-5  columns">
-							<label class="h3font ofstyle spanover" >辣子鸡</label>
+							<label class="h3font ofstyle spanover foodName" >辣子鸡</label>
 						</div>
 						<div class="small-3 columns">
-							<span class="h3font"> 12元</span> 
+							<span class="h3font foodPrice" >12</span> 
 						</div>
 						<div class="small-4 columns">
-							<button class="radius smallbtn success orderfoodBtn" onclick="orderfood(1,13,131429023498820,'辣子鸡')">点餐</button>
+							<button class="radius smallbtn success orderFood">点餐
+							<span hidden class="foodId">1</span>
+
+							</button>
 						</div>
 					</div>
 				</div>
@@ -106,7 +117,6 @@
 
 
 <script type="text/javascript">
-	var selectFood;
 
 	jQuery(function($){
 		// bind event handlers to modal triggers

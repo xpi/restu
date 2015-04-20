@@ -32,7 +32,15 @@ router.get('/need/pay', function(req, res, next) {
 
 router.post('/add', function(req, res, next) {
    connection.query('insert into rtable(table_num) values(?)', [req.body.table_num],function (error, rows, fields) {  
-   		res.send(rows);
+         res.send(rows);
+         if(error){
+            console.log(error)
+         }
+   })
+});
+router.post('/delete', function(req, res, next) {
+   connection.query('delete from rtable where table_num = ?', [req.body.table_num],function (error, rows, fields) {  
+         res.send(rows);
          if(error){
             console.log(error)
          }

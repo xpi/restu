@@ -34,7 +34,7 @@
           </div>
           <div class="row">
 
-           <div class="large-3 small-8 large-centered  small-centered  columns">
+           <div class="large-3 small-8 large-centered  small-centered  columns">  
               <input type="submit" id="okbtn" class="small radius button" value="确认" /><br/>
           </div>   
           </div>
@@ -46,7 +46,7 @@
       $(document).foundation();
       var storage = window.localStorage;
       var currentNum = storage["table_num"];
-      $("#currentNum").text("当前餐桌号是："+currentNum);
+      $("#currentNum").text("当前餐桌号是："+currentNum);  
       $("#changeTable").submit(function(){
           var table_num =$("#table_num").val();
           $("#resultMsg").html("");

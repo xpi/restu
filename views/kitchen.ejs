@@ -41,24 +41,36 @@
 			var cbtn = this;
 			changeCookingState(getCookingId(this),1,function(data){
 					changeclass(cbtn,"cooking0","cooking1");
+					$(cbtn).parent().find(".deleteCooking").remove();
 			});
 		})	
 		$(document).on("click","#cookingList .cooking1",function(){
 			var cbtn = this;
 			changeCookingState(getCookingId(this),2,function(data){
 				changeclass(cbtn,"cooking1","cooking2");
+
 			});
-		})	
+		})
+
+		$(document).on("click","#cookingList .deleteCooking",function(){
+			var cbtn = this;
+			changeCookingState(getCookingId(this),4,function(data){
+				$("#cid"+getCookingId(cbtn)).remove();
+			});
+		})
 	}
 
 
 	function changeCookingState(cooking_id,cooking_state_id,callback){
 		$.post('/cooking/update/state/',{cooking_id:cooking_id,cooking_state_id:cooking_state_id},function(data){
-			callback(data);
-			cook_state_io.emit('cook_state',{cooking_id:cooking_id,cooking_state:data.cooking_state},function(state){
-				console.log(200);
+			callback(data[0]);
+			$.get('/cooking/'+cooking_id,function(data){
+				cook_state_io.emit('cook_state',data[0],function(state){
+					console.log(data);
+				});
 			});
 		});
+
 	}
 
 	function getCookingId(obj){
@@ -68,6 +80,7 @@
 	cooking_io_res.on('cooking',function(data){
 		var order_date =  new Date().Format('hh:mm');
 	  	var food_state="cooking"+0;
+	  	console.log(data);
 		$("#cookingList").append(new EJS({url:'/ejsviews/kitchen_cookings.ejs'}).render({food_state:food_state,cooking_id:data.cooking_id,food_name:data.food_name,table_num:data.table_num,order_date:order_date}));
 
 	})
