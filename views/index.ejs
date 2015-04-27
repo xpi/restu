@@ -30,13 +30,8 @@
 
     <script>
       $(document).foundation();
-      var order_io_res = io().connect("/");
       var order_io = io.connect("/order");
-
-      order_io_res.on("order",function(data){
-        console.log(data);
-      })
-
+   
       var storage = window.localStorage;
       var currentNum = storage["table_num"];
       if(!currentNum){

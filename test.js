@@ -19,7 +19,7 @@ app.get('/', function (req, res) {
 });
 
 //路由
-var admin_routes = ["admin","main","table","food","bill","cooking","customer","kitchen","waiter","counter","account"];
+var admin_routes = ["client","admin","main","table","food","bill","cooking","customer","kitchen","waiter","counter","account"];
 for(i in admin_routes){
   var router = require('./routes/'+admin_routes[i]); 
   app.use('/'+admin_routes[i], router);
@@ -35,8 +35,6 @@ for(index in states){
     io.of('/'+states[index]).on('connection', function (socket) {
       console.log(socket.id);
       socket.on(states[index], function (data,fn) {
-          console.log(data);
-          console.log(states[index]); 
           fn(200);
           io.emit(states[index], data); 
       });

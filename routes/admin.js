@@ -11,7 +11,6 @@ router.get('/:panel', function(req, res, next) {
      var currentTab={panel1:"",panel2:"",panel3:"",panel4:"",title: '餐厅管理界面'}
      currentTab[req.params.panel]="active";
    res.render('admin', currentTab);
-
 });
 
 

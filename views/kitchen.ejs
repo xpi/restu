@@ -84,6 +84,11 @@
 		$("#cookingList").append(new EJS({url:'/ejsviews/kitchen_cookings.ejs'}).render({food_state:food_state,cooking_id:data.cooking_id,food_name:data.food_name,table_num:data.table_num,order_date:order_date}));
 
 	})
+	cooking_io_res.on('cook_state',function(data){
+		if(data.cooking_state_id==3){
+			$("#cid"+data.cooking_id).remove();
+		}
+	})
 
 
 

@@ -50,8 +50,10 @@
 
 
 	function changeCookingState(cooking_id,cooking_state_id,callback){
-		$.post('/cooking/update/state/',{cooking_id:cooking_id,cooking_state_id:cooking_state_id},function(data){
+		$.post('/cooking/update/state/',{cooking_id:cooking_state_id,cooking_state_id:cooking_state_id},function(data){
 			callback(data);
+			data["cooking_id"]=cooking_id;
+			console.log(data);
 			cook_state_io.emit('cook_state',data,function(state){
 				console.log(200);
 			});
@@ -62,6 +64,7 @@
 	function getCookingId(obj){
 		return $(obj).find(".cookingId").text()
 	}
+
 
 	cooking_io_res.on('cook_state',function(data){
 		console.log(data);

@@ -63,7 +63,9 @@
 			// });
 		})		
 		$(document).on("click","#tableList .payState2",function(){
+			var thisobj = this;
 			$.post('/table/clear',{table_num:$(this).find(".tableNum").text()},function(data){
+				finishpay_io.emit("finishpay",{clear:200,bill_id:$(thisobj).find(".billId").text()},function(state){console.log("return:"+state)});
 		 		alert("清台成功");
 		 	});
 		 	$(this).remove();

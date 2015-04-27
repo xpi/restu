@@ -2,10 +2,11 @@
 <script type="text/javascript">
 	var selectFood={};
 	var cooking_io_res = io.connect("/"); 
+	var cooking_io = io.connect("/cooking");
+
 	cooking_io_res.on('cook_state',function(data){
 		$("#cid"+data.cooking_id+" .cookState").text(data.cooking_state);
 	})
- 	var cooking_io = io.connect("/cooking");
 	$(document).on("click",".orderFood",function(){
 			console.log(storage["order"]);
 			selectFood.food_id=$(this).find(".foodId").text();

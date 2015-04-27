@@ -36,7 +36,7 @@
 </div>
 
 <script type="text/javascript">
-  var finishpay_io_res = io().connect("/");
+  var finishpay_io_res = io.connect("/");
   var finishpay_io = io.connect("/finishpay");  
  	$.get("/cooking/bill/pay/<%=bill_id%>/",function(data){
  		var paycount = 0;
@@ -52,8 +52,13 @@
         if(bill[0].pay_state == 2){ $("#payState").append("..<a href='/''>返回</a>")}
     })
     finishpay_io_res.on("finishpay",function(data){
+      console.log(data);
         if(data.bill_id==data.bill_id){
-          $("#payState").html("完成结账<a href='/''>返回</a>");
+          $("#payState").html("完成结账，等待清台<a href='/''>返回</a>");
+        }
+        if(data.clear==200){
+          alert("结账完成");
+          window.location.href="/";
         }
     })
 
