@@ -29,7 +29,6 @@ router.get('/bill/pay/:bill_id', function(req, res, next) {
 //根据单据ID查找
 router.get('/:id', function(req, res, next) {
 	var cooking_by_id = "select * from tf_state tf  right join cooking_state cs on cs.cooking_state_id = tf.cooking_state_id  right join rfood rf on rf.food_id = tf.food_id  where cooking_id = ?";
-
 	connection.query(cooking_by_id,[req.params.id],function (error, rows, fields) {  
 		res.send(rows);
 	    if(error!=null){
@@ -42,8 +41,8 @@ router.get('/:id', function(req, res, next) {
 router.get('/cooking_state/:compare/:cooking_state_id', function(req, res, next) {
 	var base = "select * from tf_state ts right join rfood rf  on rf.food_id = ts.food_id right join rbill rb on rb.bill_id = ts.bill_id where "
 	var lt_csta = base+"cooking_state_id < ?"
-	var gt_csta = base+"cooking_state_id > ? "
-	var eq_csta =  base+"cooking_state_id = ?"
+	var gt_csta = base+"cooking_state_id > ?"
+	var eq_csta =  base+"cooking_state_id = ?"	
 
 	var find_cookings_sql = "select * from tf_state";
 	if(req.params.compare=="lt"){

@@ -1,0 +1,18 @@
+<% for (i in datas){%>
+<div class="small-12 columns" style="padding:5px">
+	<div class="small-5  columns" >
+		<label class="h3font ofstyle spanover foodName" ><%=datas[i].food_name %></label>
+	</div>
+	<div class="small-3 columns">
+		<span class="h3font foodPrice" ><%=datas[i].food_price %>元</span> 
+	</div>
+	<div class="small-4 columns">
+		<button class="radius smallbtn success" onclick="findFood(<%=datas[i].food_id%>)">点餐
+		<span hidden class="foodId"><%=datas[i].food_id %></span>
+
+		</button>
+	</div>
+</div>
+
+<hr >
+<%}%>

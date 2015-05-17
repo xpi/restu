@@ -1,0 +1,17 @@
+
+<div class="large-5 small-5 columns end " id="cid<%=cooking_id%>" >
+	<div class="<%=food_state%> cookingItem "  >  
+		<label class="textcenter spanover h1font " ><%=food_name%></label>
+		<label class="textcenter">餐桌：<%=table_num%>号&nbsp;&nbsp;&nbsp;&nbsp;点餐时间：<%=order_date%> </label>
+		<span hidden class="cookingId"><%=cooking_id%></span>
+	</div>
+	<div class="func " style="height:80px;">
+	<%if(food_state=='cooking0'){%>
+		<span class="alert button deleteCooking">删除
+			<span class="cookingId" hidden><%=cooking_id%></span>
+		</span>
+	<%}%>
+	</div>
+</div>
+
+	

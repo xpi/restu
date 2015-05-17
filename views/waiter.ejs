@@ -19,7 +19,8 @@
 </nav>
 
 <br>
-	<div id="cookingList" class="">
+
+	<div id="cookingList" class="large-6 columns	">
 		
 	</div>
 <script type="text/javascript">
@@ -30,9 +31,8 @@
   		 for(i in rows){
 	  		 var order_date =  new Date(Number(rows[i].order_date)).Format('hh:mm');
 	  		 var food_state="cooking"+rows[i].cooking_state_id;
-  		 	 $("#cookingList").append(new EJS({url:'/ejsviews/kitchen_cookings.ejs'}).render({food_state:food_state,cooking_id:rows[i].cooking_id,food_name:rows[i].food_name,table_num:rows[i].table_num,order_date:order_date}));
+  		 	 $("#cookingList").append(new EJS({url:'/ejsviews/waiter_cookings.ejs'}).render({food_state:food_state,cooking_id:rows[i].cooking_id,food_name:rows[i].food_name,table_num:rows[i].table_num,order_date:order_date}));
   		 }
-		
 		initEvent();
 	});
 

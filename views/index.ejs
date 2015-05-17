@@ -52,6 +52,7 @@
               window.location.href="/account/"+currentNum+"/"+data[0].bill_id;
               return;
             }
+            
             if(!data[0].bill_id){
                $("#orderup").click(function(){
                     $.post("/bill/add/"+currentNum,function(res){

@@ -52,7 +52,7 @@ router.post('/add', function(req, res, next) {
 	console.log(req.body)
 	console.log(req.files)
 	connection.query(add_food_sql,[req.body.food_id,req.body.food_name,req.body.food_price],function (error, rows, fields) {  
-		res.rediect("/admin/panel2");
+		res.redirect("/admin/panel2");
 	    if(error!=null){
 	        console.log(error); 
 	    }
@@ -69,7 +69,53 @@ router.post('/delete', function(req, res, next) {
 	    }
 	});
 });
+//更新
+router.post('/update', function(req, res, next) {
+	var add_food_sql="delete from rfood where food_id= ?"
+	connection.query(add_food_sql,[req.body.food_id],function (error, rows, fields) {  
+	  	var add_food_sql="insert into rfood(food_id,food_name,food_price) values(?,?,?)"
+		connection.query(add_food_sql,[req.body.food_id,req.body.food_name,req.body.food_price],function (error, rows, fields) {  
+		    if(error!=null){
+		        console.log(error); 
+			}
+			res.send(rows);
+		});
+	    if(error!=null){
+	        console.log(error); 
+	    }
+	});
+});
 
+//随机点餐
+router.get('/query/rand', function(req, res, next) {
+	var rnd_food_sql="select * from rfood where food_id >= (select round(max(food_id)*rand()) from rfood)"
+	var max_id_sql = "select max(food_id) max_id from rfood";
+	connection.query(max_id_sql,function (error, rows, fields) {  
+		var maxid = rows[0].max_id ;
+		var rand_ids = {};
+		for(var i =0;i<5;i++){
+			var rid = Math.floor(Math.random()*maxid+1);
+			var key = "rnd"+rid;
+			if(!rand_ids[key]){
+				rand_ids[key]=rid;
+			}else{
+				i--;
+			}
+		}	
+		console.log(rand_ids);
+		var ids = [];
+		for(var key in rand_ids){
+			ids[ids.length]=rand_ids[key];
+		}
+				console.log(ids);
 
+		connection.query("select * from rfood where food_id in ("+ids.join(",")+")",function (error2, data, fields2) {  
+			res.send(data)
+		});
+	    if(error!=null){
+	        console.log(error); 
+	    }
+	});
+});
 
 module.exports = router;

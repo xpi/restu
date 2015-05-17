@@ -11,21 +11,21 @@
 
 </nav>
 <div style="margin-left:auto;margin-right:auto;width:960px;">
-	<ul class="tabs" data-tab style="border:2px solid red;">
-	<li class="tab-title active"><a href="#panel1">餐桌管理</a></li>
+	<ul class="tabs" data-tab style="border:1px solid #ddd;">
+	<li class="tab-title"><a href="#panel1">餐桌管理</a></li>
 	<li class="tab-title"><a href="#panel2">菜品管理</a></li>
 	<li class="tab-title"><a href="#panel3">职员管理</a></li>
-	<li class="tab-title"><a href="#panel4">订单管理</a></li>
-	</ul>
-	<div class="tabs-content" data-tab style="border:2px solid red;margin-top:10px">
+<!-- 	<li class="tab-title"><a href="#panel4">订单管理</a></li>
+ -->	</ul>
+	<div class="tabs-content" data-tab style="border:1px solid #ddd;margin-top:10px">
 	  <div class="content <%=panel1%>" id="panel1">
 	  </div>
 	  <div class="content <%=panel2%>" id="panel2">
 	  </div>
 	  <div class="content <%=panel3%>" id="panel3">
 	  </div>
-	  <div class="content <%=panel4%>" id="panel4">
-	  </div>
+	<!--   <div class="content <%=panel4%>" id="panel4">
+	  </div> -->
 	</div>
 </div>
 
@@ -48,6 +48,11 @@ function deleteTable(table_num,obj){
 		});
 }
 function deleteFood(food_id,obj){
+	var isf =confirm("确认");
+	  if(!isf){
+
+        return;
+      }
 	$.post("/food/delete",{food_id:food_id},function(data){
 			$(obj).parent().parent().remove();
 		});

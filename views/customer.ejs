@@ -5,6 +5,7 @@
 	var cooking_io = io.connect("/cooking");
 
 	cooking_io_res.on('cook_state',function(data){
+		console.log(data);
 		$("#cid"+data.cooking_id+" .cookState").text(data.cooking_state);
 	})
 	$(document).on("click",".orderFood",function(){
@@ -19,6 +20,19 @@
 			$('#test-modal').modal().open();	
 	})
 
+	function findFood(fid){
+		$.get('/food/'+fid+"/",function(rows){
+			selectFood.food_id=rows[0].food_id;
+			selectFood.food_name=rows[0].food_name;
+			selectFood.food_price=rows[0].food_price;
+
+			var html = new EJS({url: '/ejsviews/food_modal.ejs'}).render({food_name:selectFood.food_name,food_price:selectFood.food_price,food_id:selectFood.food_id,table_num:<%=table_num%>,bill_id:<%=bill_id%>});
+			$('#test-modal').html("");
+			$('#test-modal').append(html);
+			$('#test-modal').modal().open();	
+		})
+			
+	}
 	
 </script>
 <nav class="top-bar" data-topbar role="navigation">
@@ -74,22 +88,11 @@
 					</div>
 				</div>			  
 			</div> -->
-			<span class="h2font success label">推荐搭配</span>
+			<span class="h2font success label">搭配</span>
 			<div id="relativeFood" style="overflow:scroll;height:395px;border:1px solid #ccc;background:#eee;padding:5px;">
 				<div class="panel rcorg" style="padding:5px;" id="fid1">
 					<div class="row sugFoodItem" >
-						<div class="small-5  columns">
-							<label class="h3font ofstyle spanover foodName" >辣子鸡</label>
-						</div>
-						<div class="small-3 columns">
-							<span class="h3font foodPrice" >12</span> 
-						</div>
-						<div class="small-4 columns">
-							<button class="radius smallbtn success orderFood">点餐
-							<span hidden class="foodId">1</span>
-
-							</button>
-						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -112,7 +115,14 @@
 			</div>	
 		</div>
 </div>
+<div class="row">
+	<div class="large-4 small-4 columns">
+		<button class="radius small button" id="rndOrder" style="font-size:25px;height:70px;margin:5px;">随机搭配</button>
 
+	</div>
+
+
+</div>
 
 <div class="modal" id="test-modal" hidden></div>
 
@@ -191,6 +201,17 @@
 		$.get('/cooking/bill/'+<%=bill_id%>,function(rows){
 			console.log(rows);
 			$("#foodList").append(new EJS({url:"/ejsviews/selected_foods.ejs"}).render({data:rows}));
+
+		})
+
+		$("#rndOrder").click(function(){
+
+			$.get('/food/query/rand/',function(rows){
+			console.log(rows);
+			$(".sugFoodItem").html("");
+			$(".sugFoodItem").append(new EJS({url:"/ejsviews/recomment.ejs"}).render({datas:rows}));
+
+		})
 
 		})
 	}
